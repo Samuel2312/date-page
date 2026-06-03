@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>I have a question for you 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose:    #e8476a;
+    --rose-lt: #fde8ed;
+    --rose-dk: #c0304f;
+    --blush:   #fad4dc;
+    --cream:   #fff8f4;
+    --lavender:#c9b8e8;
+    --lav-lt:  #ede8f9;
+    --text:    #3a2030;
+    --muted:   #9a7585;
+    --white:   #ffffff;
+  }
+
+  html, body { height: 100%; font-family: 'DM Sans', sans-serif; }
+
+  body {
+    background: var(--cream);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2rem 0 3rem;
+    position: relative;
+  }
+
+  .bg-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+
+  .petal {
+    position: absolute;
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: petalFall linear infinite;
+  }
+
+  @keyframes petalFall {
+    0%   { transform: translateY(-60px) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(110vh) rotate(420deg); opacity: 0; }
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%,  #fce4ec88 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 90%,  #ede8f988 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 60% 40%,  #fff0f588 0%, transparent 55%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── Card ── */
+  .card {
+    position: relative;
+    z-index: 2;
+    background: var(--white);
+    border-radius: 32px;
+    padding: 3rem 2.8rem 2.8rem;
+    max-width: 460px;
+    width: calc(100vw - 2rem);
+    text-align: center;
+    overflow: hidden;
+    box-shadow:
+      0 4px 24px rgba(232,71,106,0.10),
+      0 1px 4px  rgba(232,71,106,0.06),
+      inset 0 0 0 1px rgba(232,71,106,0.08);
+    animation: cardIn 0.55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+
+  @keyframes cardIn {
+    from { transform: scale(0.85) translateY(20px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .card::before, .card::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--blush);
+  }
+  .card::before { top: 18px; left: 22px; }
+  .card::after  { top: 18px; right: 22px; }
+
+  /* ── Avatar ── */
+  .avatar {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: var(--rose-lt);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+    margin: 0 auto 1.6rem;
+    border: 3px solid var(--blush);
+    animation: idleBob 3s ease-in-out infinite;
+  }
+
+  @keyframes idleBob {
+    0%,100% { transform: translateY(0)   rotate(0deg); }
+    40%     { transform: translateY(-5px) rotate(-2deg); }
+    70%     { transform: translateY(-2px) rotate(2deg); }
+  }
+
+  .avatar.shake { animation: shakeHead 0.5s ease forwards; }
+
+  @keyframes shakeHead {
+    0%,100% { transform: rotate(0deg); }
+    20%     { transform: rotate(-12deg) scale(1.08); }
+    40%     { transform: rotate(10deg) scale(1.1); }
+    60%     { transform: rotate(-8deg); }
+    80%     { transform: rotate(6deg); }
+  }
+
+  /* ── Typography ── */
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 0.6rem;
+  }
+
+  .subline {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Step screens ── */
+  .screen { display: none; }
+  .screen.active { display: block; animation: screenIn 0.45s cubic-bezier(.34,1.56,.64,1) both; }
+
+  @keyframes screenIn {
+    from { transform: translateY(18px) scale(0.96); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* ── Primary btn ── */
+  .btn-primary {
+    background: var(--rose);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 15px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 18px rgba(232,71,106,0.35);
+    transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: var(--rose-dk);
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: 0 8px 24px rgba(232,71,106,0.45);
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  /* ── No button ── */
+  #btn-no {
+    position: absolute;
+    background: var(--white);
+    color: var(--muted);
+    border: 1.5px solid #e8d0d6;
+    border-radius: 999px;
+    padding: 13px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: font-size 0.25s, color 0.25s, opacity 0.2s;
+    z-index: 10;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .hint {
+    margin-top: 1.2rem;
+    font-size: 12px;
+    color: #d9aab8;
+    height: 16px;
+  }
+
+  /* ── Date Picker ── */
+  .date-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  #datePicker {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid var(--blush);
+    border-radius: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: var(--text);
+    background: var(--rose-lt);
+    outline: none;
+    margin-bottom: 1.6rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  #datePicker:focus { border-color: var(--rose); }
+
+  /* ── Food choice grid ── */
+  .food-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.8rem;
+  }
+
+  .food-card {
+    border: 2px solid var(--blush);
+    border-radius: 20px;
+    padding: 18px 10px 14px;
+    cursor: pointer;
+    background: var(--white);
+    transition: border-color 0.2s, background 0.2s, transform 0.18s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .food-card:hover { transform: translateY(-3px); border-color: var(--rose); }
+
+  .food-card.selected {
+    border-color: var(--rose);
+    background: var(--rose-lt);
+    transform: scale(1.04);
+  }
+
+  .food-card .food-emoji { font-size: 36px; }
+  .food-card .food-name  { font-size: 13px; font-weight: 500; color: var(--text); }
+
+  /* ── Final confirmation card ── */
+  #finalScreen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    z-index: 2;
+    position: relative;
+    text-align: center;
+    background: var(--white);
+    border-radius: 32px;
+    padding: 3rem 2.8rem 2.8rem;
+    max-width: 460px;
+    width: calc(100vw - 2rem);
+    box-shadow:
+      0 4px 24px rgba(232,71,106,0.10),
+      0 1px 4px  rgba(232,71,106,0.06),
+      inset 0 0 0 1px rgba(232,71,106,0.08);
+    animation: cardIn 0.55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+
+  .final-emoji { font-size: 72px; animation: popIn 0.6s cubic-bezier(.34,1.56,.64,1) both; }
+
+  @keyframes popIn {
+    from { transform: scale(0) rotate(-20deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+  }
+
+  .final-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    animation: fadeUp 0.5s 0.15s both;
+  }
+
+  .summary-box {
+    background: var(--rose-lt);
+    border: 1.5px solid var(--blush);
+    border-radius: 20px;
+    padding: 18px 24px;
+    width: 100%;
+    max-width: 320px;
+    animation: fadeUp 0.5s 0.3s both;
+  }
+
+  .summary-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    border-bottom: 1px solid #f8d4dd;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .s-icon { font-size: 20px; }
+  .summary-row .s-val  { color: var(--rose-dk); font-weight: 600; }
+
+  .final-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 290px;
+    animation: fadeUp 0.5s 0.45s both;
+  }
+
+  .final-hearts { font-size: 22px; letter-spacing: 4px; animation: fadeUp 0.5s 0.6s both; }
+
+  @keyframes fadeUp {
+    from { transform: translateY(14px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* ── Confetti ── */
+  .confetti {
+    position: fixed;
+    width: 9px; height: 9px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 100;
+    animation: confettiFall 2s ease-out forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { transform: translateY(0)     rotate(0deg)   scaleX(1);   opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(400px) rotate(600deg) scaleX(0.4); opacity: 0; }
+  }
+
+  .hidden { display: none !important; }
+
+  /* progress dots */
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.8rem;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--blush);
+    transition: background 0.3s, transform 0.3s;
+  }
+  .step-dot.done  { background: var(--rose); }
+  .step-dot.active { background: var(--rose); transform: scale(1.4); }
+</style>
+</head>
+<body>
+
+<div class="bg-layer" id="bgLayer"></div>
+
+<!-- ═══════════════ MAIN CARD (steps 1–3) ═══════════════ -->
+<div class="card" id="mainCard">
+  <div class="avatar" id="bear">🐼</div>
+
+  <!-- Progress dots -->
+  <div class="steps">
+    <div class="step-dot active" id="dot0"></div>
+    <div class="step-dot"        id="dot1"></div>
+    <div class="step-dot"        id="dot2"></div>
+  </div>
+
+  <!-- ── STEP 1: Ask out ── -->
+  <div class="screen active" id="step1">
+    <p class="eyebrow">A very important question</p>
+    <h1 class="headline">Will you go on a<br><em>date</em> with me?</h1>
+    <p class="subline">I pinky-promise it'll be the most<br>panda-monium of a wonderful evening 🎋✨</p>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;">
+      <button class="btn-primary" onclick="sayYes()">Yes, absolutely! 💕</button>
+      <button id="btn-no" onclick="noBtnClicked()">No</button>
+    </div>
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <!-- ── STEP 2: Pick a date ── -->
+  <div class="screen" id="step2">
+    <p class="eyebrow">Step 2 of 3</p>
+    <h1 class="headline">Pick a <em>date</em> 📅</h1>
+    <p class="subline">When should this magical evening happen?</p>
+
+    <p class="date-label">Choose your date</p>
+    <input type="date" id="datePicker" />
+
+    <button class="btn-primary" onclick="confirmDate()">Next →</button>
+  </div>
+
+  <!-- ── STEP 3: Pick food ── -->
+  <div class="screen" id="step3">
+    <p class="eyebrow">Step 3 of 3</p>
+    <h1 class="headline">What are we <em>eating?</em> 🍽️</h1>
+    <p class="subline">Pick the vibe for our date night!</p>
+
+    <div class="food-grid">
+      <div class="food-card" onclick="selectFood(this,'Habeshan 🇪🇹','🇪🇹')">
+        <span class="food-emoji">🇪🇹</span>
+        <span class="food-name">Habeshan</span>
+      </div>
+      <div class="food-card" onclick="selectFood(this,'Chicken 🍗','🍗')">
+        <span class="food-emoji">🍗</span>
+        <span class="food-name">Chicken</span>
+      </div>
+      <div class="food-card" onclick="selectFood(this,'Pizza 🍕','🍕')">
+        <span class="food-emoji">🍕</span>
+        <span class="food-name">Pizza</span>
+      </div>
+      <div class="food-card" onclick="selectFood(this,'Noodles 🍜','🍜')">
+        <span class="food-emoji">🍜</span>
+        <span class="food-name">Noodles</span>
+      </div>
+      <div class="food-card" onclick="selectFood(this,'Spaghetti 🍝','🍝')">
+        <span class="food-emoji">🍝</span>
+        <span class="food-name">Spaghetti</span>
+      </div>
+      <div class="food-card" onclick="selectFood(this,'Surprise me! 🎁','🎁')">
+        <span class="food-emoji">🎁</span>
+        <span class="food-name">Surprise me!</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="foodNextBtn" onclick="confirmFood()" disabled style="opacity:0.5;cursor:not-allowed;">
+      Let's go! 🎉
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ FINAL SCREEN ═══════════════ -->
+<div id="finalScreen">
+  <div class="final-emoji">🐼💕</div>
+  <p class="final-title">It's officially a date!</p>
+
+  <div class="summary-box">
+    <div class="summary-row">
+      <span class="s-icon">📅</span>
+      <span>Date</span>
+      <span class="s-val" id="summaryDate">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="s-icon" id="summaryFoodIcon">🍽️</span>
+      <span>Food</span>
+      <span class="s-val" id="summaryFood">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="s-icon">🐼</span>
+      <span>Dress code</span>
+      <span class="s-val">Extra cute 💌</span>
+    </div>
+  </div>
+
+  <p class="final-sub">You just made the best decision of your entire life.<br>The panda is already picking an outfit 🥺✨</p>
+  <p class="final-hearts">💗 🐼 💗 🎋 💗</p>
+  <button class="btn-primary" id="sendBtn" onclick="sendToFormspree()" style="margin-top:0.5rem;">
+    Send my answer 💌
+  </button>
+  <p style="font-size:11px;color:#d9aab8;margin-top:4px;" id="sendStatus">Tap to confirm your choices!</p>
+</div>
+
+<script>
+  /* ── Petal rain ── */
+  const petalColors = ['#fad4dc','#e8c9e0','#fce4ec','#f8bbd0','#e1bee7','#ffe0e8'];
+  const bgLayer = document.getElementById('bgLayer');
+
+  function spawnPetal() {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const size = 8 + Math.random() * 14;
+    p.style.cssText = [
+      `width:${size}px`,`height:${size}px`,
+      `left:${Math.random()*100}%`,`top:-${size+10}px`,
+      `background:${petalColors[Math.floor(Math.random()*petalColors.length)]}`,
+      `animation-duration:${5+Math.random()*6}s`,
+      `animation-delay:${Math.random()*4}s`,
+      `transform:rotate(${Math.random()*360}deg)`
+    ].join(';');
+    bgLayer.appendChild(p);
+    setTimeout(() => p.remove(), 12000);
+  }
+
+  for (let i = 0; i < 12; i++) setTimeout(spawnPetal, i * 300);
+  setInterval(spawnPetal, 1200);
+
+  /* ── No button ── */
+  const noBtn  = document.getElementById('btn-no');
+  const bearEl = document.getElementById('bear');
+  const hintEl = document.getElementById('hint');
+  let noHoverCount = 0, placed = false;
+  // Move noBtn inside the card so absolute positioning is relative to card
+  document.getElementById('mainCard').appendChild(noBtn);
+
+  const noLabels = ['No','Nope 🙅','Not today...','Still no!','Are you sure??','Last chance...','Okay, maybe? 👀'];
+  const hints    = ['','psst — try clicking Yes instead 😇',"the No button doesn't want to be clicked...",'maybe it\'s trying to tell you something 🌸','you could just give in, you know... 💕','',''];
+
+  function placeNaturally() {
+    // just flee immediately - absolute coords are relative to card
+    placed = true;
+    flee();
+  }
+
+  function flee() {
+    const card = document.getElementById('mainCard');
+    const bw   = noBtn.offsetWidth  || 90;
+    const bh   = noBtn.offsetHeight || 46;
+    const pad  = 18;
+    const maxX = card.offsetWidth  - bw - pad;
+    const maxY = card.offsetHeight - bh - pad;
+    noBtn.style.left = (pad + Math.random() * (maxX - pad)) + 'px';
+    noBtn.style.top  = (pad + Math.random() * (maxY - pad)) + 'px';
+  }
+
+  noBtn.addEventListener('mouseenter', () => {
+    if (!placed) placeNaturally();
+    flee(); // run away!
+    noHoverCount++;
+    const idx = Math.min(noHoverCount, noLabels.length - 1);
+    noBtn.textContent  = noLabels[idx];
+    hintEl.textContent = hints[idx] || '';
+    noBtn.style.fontSize = [15,14,13,12,11,11,10][Math.min(noHoverCount-1,6)] + 'px';
+    bearEl.classList.remove('shake');
+    void bearEl.offsetWidth;
+    bearEl.classList.add('shake');
+    setTimeout(() => bearEl.classList.remove('shake'), 600);
+  });
+
+  noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault(); flee();
+    noHoverCount++;
+    noBtn.textContent = noLabels[Math.min(noHoverCount, noLabels.length-1)];
+  }, { passive: false });
+
+  function noBtnClicked() { flee(); }
+  window.addEventListener('resize', () => { if (placed) flee(); });
+
+  /* ── Step helpers ── */
+  function setDots(active) {
+    for (let i = 0; i < 3; i++) {
+      const d = document.getElementById('dot'+i);
+      d.className = 'step-dot' + (i < active ? ' done' : i === active ? ' active' : '');
+    }
+  }
+
+  function goToScreen(id, dotIndex) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    setDots(dotIndex);
+    // restart avatar idle animation
+    bearEl.style.animation = 'none';
+    void bearEl.offsetWidth;
+    bearEl.style.animation = 'idleBob 3s ease-in-out infinite';
+  }
+
+  /* ── Step 1 → 2 ── */
+  function sayYes() {
+    noBtn.classList.add('hidden');
+    // Set min date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('datePicker').min = today;
+    goToScreen('step2', 1);
+  }
+
+  /* ── Step 2 → 3 ── */
+  function confirmDate() {
+    const dp = document.getElementById('datePicker');
+    if (!dp.value) { dp.style.borderColor = 'var(--rose)'; dp.focus(); return; }
+    dp.style.borderColor = '';
+    goToScreen('step3', 2);
+  }
+
+  /* ── Food selection ── */
+  let selectedFood = null, selectedFoodIcon = null;
+
+  function selectFood(el, label, icon) {
+    document.querySelectorAll('.food-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedFood = label;
+    selectedFoodIcon = icon;
+    const btn = document.getElementById('foodNextBtn');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor  = 'pointer';
+  }
+
+  /* ── Step 3 → Final ── */
+  function confirmFood() {
+    if (!selectedFood) return;
+
+    // Build summary
+    const dp = document.getElementById('datePicker').value;
+    const dateObj = new Date(dp + 'T12:00:00');
+    const formatted = dateObj.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+    document.getElementById('summaryDate').textContent     = formatted;
+    document.getElementById('summaryFood').textContent     = selectedFood;
+    document.getElementById('summaryFoodIcon').textContent = selectedFoodIcon;
+
+    // Swap screens
+    document.getElementById('mainCard').classList.add('hidden');
+    const fs = document.getElementById('finalScreen');
+    fs.style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    launchConfetti();
+    for (let i = 0; i < 20; i++) setTimeout(spawnPetal, i * 60);
+  }
+
+  /* ── Formspree ── */
+  async function sendToFormspree() {
+    const date   = document.getElementById('summaryDate').textContent;
+    const food   = document.getElementById('summaryFood').textContent;
+    const btn    = document.getElementById('sendBtn');
+    const status = document.getElementById('sendStatus');
+
+    btn.disabled = true;
+    btn.textContent = 'Sending… 💌';
+
+    try {
+      const res = await fetch('https://formspree.io/f/mqeoznll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          message: '🐼💕 She said YES!',
+          date: date,
+          food: food
+        })
+      });
+
+      if (res.ok) {
+        btn.textContent = 'Sent! 🎉';
+        btn.style.background = '#4ecb71';
+        status.textContent = 'He already knows — see you soon! 🌸';
+      } else {
+        throw new Error('failed');
+      }
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Send my answer 💌';
+      status.textContent = 'Something went wrong, try again 😢';
+    }
+  }
+
+  /* ── Confetti ── */
+  const confColors = ['#e8476a','#fad4dc','#c9b8e8','#5DCAA5','#fac775','#f4c0d1','#85b7eb'];
+
+  function launchConfetti() {
+    for (let i = 0; i < 70; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.cssText = [
+          `background:${confColors[Math.floor(Math.random()*confColors.length)]}`,
+          `left:${10+Math.random()*80}%`,
+          `top:${5+Math.random()*30}%`,
+          `animation-delay:${Math.random()*0.5}s`,
+          `animation-duration:${1.5+Math.random()*1.2}s`,
+          `border-radius:${Math.random()>0.5?'50%':'2px'}`
+        ].join(';');
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3500);
+      }, i * 22);
+    }
+  }
+</script>
+</body>
+</html>
